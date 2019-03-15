@@ -1,0 +1,5 @@
+<design:component>	
+    <design:attribute name="objectType" label="Object Type" description="API Name of the object to create" />       
+    <design:attribute name="configurationName" label="Configiration Name" description="API Name of the custom settings to be using to process the records" />     
+       
+</design:component>
