@@ -14,20 +14,24 @@
     	<aura:attribute name="objectType" type="String" default="Account"/>    
     	<aura:attribute name="configurationName" type="String"/>     
     
+    <!-- Message Management -->
+    	<aura:attribute name="messageType" type="String"/>     
+    	<aura:attribute name="message" type="String"/>     
+        <aura:attribute name="messageTitle" type="String"/>     
+    
     <!-- For now true as the I havent found a way to prepopulate the recordForm -->    
     	<aura:attribute name="useFullLayout" type="boolean" default="false"/>
     
     <!-- Variables -->
     	<aura:attribute name="formfieldsData" type="LB_EntityFromUIMetadata[]" />
-
-    
+		
     <!-- Haandlers -->
     	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     
     
     	<aura:method name="loadInitValues" action="{!c.doInit}" description="Invoke this method once parameters are set" /> 
    
-    
+        
      <aura:if isTrue="{!v.useFullLayout == true}">  
          	
          <lightning:recordForm aura:id="formdata"
@@ -36,14 +40,17 @@
              columns="2"
              mode="edit"            
          />
-         	
+              
      <aura:set attribute="else"> 
          
           <fieldset class="slds-box slds-theme--default slds-container--large">
-            <legend id="newexpenseform" class="slds-text-heading--small 
-              slds-p-vertical--medium">
-              New {!v.objectType}
-            </legend>
+			
+              <div class="slds-text-heading_small">
+              	 New {!v.objectType}
+              </div>
+              
+          <lightning:spinner alternativeText="Loading" size="small" aura:id="fieldLoadingSpinner" />
+          <c:LB_MessageBuilder type="{!v.messageType}" message="{!v.message}" title="{!v.messageTitle}" />
             
            <form class="slds-form--stacked">  
                 <lightning:recordEditForm                       

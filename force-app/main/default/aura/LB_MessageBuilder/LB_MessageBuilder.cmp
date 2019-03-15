@@ -1,0 +1,11 @@
+<aura:component >
+    
+    <aura:attribute name="title" description="Message Title, can be any text" type="String" default="Title"/>
+    <aura:attribute name="message" description="Message content, can be HTML" type="String" default="Message"/>
+    <aura:attribute name="type" description="Message type, can be confirm/info/warning/error" type="String" default="info"/>
+        
+    <ui:message title="{!v.title}" severity="{!v.type}" closable="true">
+			<aura:unescapedHtml value="{!v.message}"/>
+	</ui:message>
+	
+</aura:component>

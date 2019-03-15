@@ -26,9 +26,14 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             
+            //Hide spinner            
+            var spinner = component.find("fieldLoadingSpinner");
+        	//$A.util.toggleClass(spinner, "slds-hide");
+        	$A.util.addClass(spinner, 'slds-hide');
+            
             if (state === "SUCCESS") {                
                 
-                console.log("From server: " + response.getReturnValue()); 
+                helper.debugObject("From server: " , response.getReturnValue()); 
                 
                 var res = response.getReturnValue(); 
                 
@@ -44,6 +49,7 @@
                     
                 }else{                    
                     helper.fireToast(res.errorTittle, res.errorMessage , "error");
+                    helper.displaymessage(component,res.errorTittle, res.errorMessage , "error");
                 }
 
                 
@@ -58,6 +64,7 @@
                     }
                 }                
                 helper.fireToast("Error",errorMessage, "error");
+                helper.displaymessage(component,"Error",errorMessage, "error");                
                 
             }else{
                 
@@ -69,6 +76,23 @@
         $A.enqueueAction(action);   
     
 	},
+    
+    //Generic message
+    
+    	displaymessage : function(component, title, message, type) {    
+            /*component.find('notifLib').showNotice({
+                "variant": type,
+                "header": title,
+                "message": message,
+                closeCallback: function() {
+                    alert('You closed the alert!');
+                }
+            });*/
+            
+            component.set("v.messageType", type );
+            component.set("v.message",  message );
+            component.set("v.messageTitle", title );
+        },
     
     //Generic Toast Generator
         fireToast : function(title, message, type) {        
@@ -82,5 +106,11 @@
             
             toastEvent.fire();              
             
+        },
+    
+    //Serialize the object and display in the console
+        debugObject : function(message, object) {        
+            var myJSON = JSON.stringify(object);
+    		console.log(message+myJSON);            
         }
 })

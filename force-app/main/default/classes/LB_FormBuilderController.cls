@@ -41,28 +41,40 @@ public with sharing class LB_FormBuilderController {
                         
                     //Get the Schema fields
                         List<Schema.FieldSetMember> fieldSetMemberList =  LB_SchemaMetadataUtil.readFieldSet(formConfig.Field_Set_Name__c,UIParameters.objectType);
-                        
-                    for(sObject defaultedObject : prefilledObjects){            
-                        
-                        for(Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList){  
-                            /*system.debug('API Name ====>' + fieldSetMemberObj.getFieldPath()); //api name
-                            system.debug('Label ====>' + fieldSetMemberObj.getLabel());
-                            system.debug('Required ====>' + fieldSetMemberObj.getRequired());
-                            system.debug('DbRequired ====>' + fieldSetMemberObj.getDbRequired());
-                            system.debug('Type ====>' + fieldSetMemberObj.getType());   //type - STRING,PICKLIST/*/
+
+                     if(fieldSetMemberList != null && fieldSetMemberList.size() > 0){  
+                        for(sObject defaultedObject : prefilledObjects){  
+                            for(Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList){  
+                                /*system.debug('API Name ====>' + fieldSetMemberObj.getFieldPath()); //api name
+                                system.debug('Label ====>' + fieldSetMemberObj.getLabel());
+                                system.debug('Required ====>' + fieldSetMemberObj.getRequired());
+                                system.debug('DbRequired ====>' + fieldSetMemberObj.getDbRequired());
+                                system.debug('Type ====>' + fieldSetMemberObj.getType());   //type - STRING,PICKLIST/*/
+                                
+                                LB_EntityFromUIMetadata UiMetadata = new LB_EntityFromUIMetadata();
+                                
+                                UiMetadata.fieldApiName   = fieldSetMemberObj.getFieldPath();
+                                UiMetadata.fieldtype 	  = fieldSetMemberObj.getType()+'';
+                                UiMetadata.fieldLabel     = fieldSetMemberObj.getLabel();
+                                UiMetadata.fieldValue     = (String)defaultedObject.get(fieldSetMemberObj.getFieldPath());
+                                UiMetadata.required 	  = fieldSetMemberObj.getDbRequired() || fieldSetMemberObj.getRequired();               
+                                                                                                            
+                                listData.add(UiMetadata);                                      
                             
-                            LB_EntityFromUIMetadata UiMetadata = new LB_EntityFromUIMetadata();
-                            
-                            UiMetadata.fieldApiName   = fieldSetMemberObj.getFieldPath();
-                            UiMetadata.fieldtype 	  = fieldSetMemberObj.getType()+'';
-                            UiMetadata.fieldLabel     = fieldSetMemberObj.getLabel();
-                            UiMetadata.fieldValue     = (String)defaultedObject.get(fieldSetMemberObj.getFieldPath());
-                            UiMetadata.required 	  = fieldSetMemberObj.getDbRequired() || fieldSetMemberObj.getRequired();               
-                                                                                                        
-                            listData.add(UiMetadata);                                      
+                            }
+                        }
                         
-                        }  
-                        
+                        //Prepare Outcome
+                            processOutCome.isValid = true;
+                            processOutCome.errorTittle = null;
+                            processOutCome.errorMessage = null;
+                            processOutCome.metadataInfo = listData;  
+                         
+                    }else{
+                        processOutCome.isValid = false;
+                        processOutCome.errorTittle = 'Form Builder Error';
+                        processOutCome.errorMessage = 'Field set no found ' + formConfig.Field_Set_Name__c;
+                        processOutCome.metadataInfo = null;     
                     }
                     
                 }else{
@@ -71,11 +83,7 @@ public with sharing class LB_FormBuilderController {
                     
                 }   
                             
-                //Prepare Outcome
-                processOutCome.isValid = true;
-                processOutCome.errorTittle = null;
-                processOutCome.errorMessage = null;
-                processOutCome.metadataInfo = listData; 
+                
                 
             }else{
                 

@@ -28,7 +28,7 @@ public with sharing class LB_SchemaMetadataUtil {
         
         //List<Schema.FieldSetMember> fieldSetMemberList =  fieldSetObj.getFields();
     	//system.debug('fieldSetMemberList ====>' + fieldSetMemberList);  
-    	return fieldSetObj.getFields(); 
+    	return fieldSetObj != null ? fieldSetObj.getFields() : null; 
 	} 
     
       
