@@ -31,11 +31,24 @@ SOFTWARE.
 
 ************************************************************************************************************************************/
 ({
-    /* doInit: To be invoke on Load
-     * 
-     */	
-	doInit : function(component, event, helper) {       
-        helper.loadDefaultValeus(component, event, helper);
-       
-	}
+    
+    //Generic Toast Generator to be used by children components 
+      fireToast : function(title, message, type) {        
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+                "title": title,
+                        "duration": 10000,
+                        "type":type,
+                "message": message
+            });
+        
+        toastEvent.fire();              
+        
+    },
+
+//Serialize the object and display in the console. to be used by children components 
+    debugObject : function(message, object) {        
+        var myJSON = JSON.stringify(object);
+        console.log(message+myJSON);            
+    }
 })

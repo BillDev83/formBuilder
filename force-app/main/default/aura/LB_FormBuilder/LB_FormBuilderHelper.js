@@ -1,3 +1,36 @@
+/***********************************************************************************************************************************
+Created Date        : 03/08/2019
+Function            : 
+Author              : William Lopez, william.salesforce@gmail.com - @BillSalesforce
+Modification Log    :
+* Developer                Date                 Description
+* ----------------------------------------------------------------------------                 
+* William Lopez           03/14/2019        Original Version
+
+MIT License
+
+Copyright (c) 2019 William Lopez
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+************************************************************************************************************************************/
+
 ({
     
     /**
@@ -8,7 +41,9 @@
      	//Get parameters
         	var recordId = component.get("v.recordId");        	
         	var objectType = component.get("v.objectType");
-        	var configurationName = component.get("v.configurationName");
+            var configurationName = component.get("v.configurationName");
+            var formUtils = component.find("formUtils");
+            
         
          console.log('Helper recordId = ' + component.get("v.recordId") + ' configurationName = ' + configurationName + ' objectType = ' + objectType);
         
@@ -33,7 +68,7 @@
             
             if (state === "SUCCESS") {                
                 
-                helper.debugObject("From server: " , response.getReturnValue()); 
+                formUtils.debugObject("From server: " , response.getReturnValue()); 
                 
                 var res = response.getReturnValue(); 
                 
@@ -49,7 +84,7 @@
                     
                 }else{                    
                     helper.fireToast(res.errorTittle, res.errorMessage , "error");
-                    helper.displaymessage(component,res.errorTittle, res.errorMessage , "error");
+                    formUtils.displaymessage(component,res.errorTittle, res.errorMessage , "error");
                 }
 
                 
@@ -63,12 +98,12 @@
                         errorMessage = errors[0].message;
                     }
                 }                
-                helper.fireToast("Error",errorMessage, "error");
+                formUtils.fireToast("Error",errorMessage, "error");
                 helper.displaymessage(component,"Error",errorMessage, "error");                
                 
             }else{
                 
-               helper.fireToast("INCOMPLETE","Server Side State = " + state, "error");
+                formUtils.fireToast("INCOMPLETE","Server Side State = " + state, "error");
                 
             }
         });
@@ -94,23 +129,5 @@
             component.set("v.messageTitle", title );
         },
     
-    //Generic Toast Generator
-        fireToast : function(title, message, type) {        
-            var toastEvent = $A.get("e.force:showToast");
-            toastEvent.setParams({
-                    "title": title,
-                            "duration": 10000,
-                            "type":type,
-                    "message": message
-                });
-            
-            toastEvent.fire();              
-            
-        },
-    
-    //Serialize the object and display in the console
-        debugObject : function(message, object) {        
-            var myJSON = JSON.stringify(object);
-    		console.log(message+myJSON);            
-        }
+  
 })

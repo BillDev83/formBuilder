@@ -30,12 +30,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ************************************************************************************************************************************/
+
 ({
-    /* doInit: To be invoke on Load
-     * 
-     */	
-	doInit : function(component, event, helper) {       
-        helper.loadDefaultValeus(component, event, helper);
-       
-	}
+
+    //handle the fire toast and call the helper
+    doFireToast : function(component, event, helper) {
+        var params = event.getParam('arguments');
+        var title = params.title;
+        var message = params.message;
+        var type = params.type;
+        helper.fireToast(title,message,type);
+    },
+    //handle the debug and call the helper
+    doJsdebugObject : function(component, event, helper) {
+        var params = event.getParam('arguments');
+        var message = params.message;
+        var object = params.object;      
+        helper.debugObject(message,object);
+    },
 })

@@ -1,11 +1,12 @@
-/***********************************************************************************************************************************
-Created Date        : 03/08/2019
-Function            : 
-Author              : William Lopez, william.salesforce@gmail.com - @BillSalesforce
-Modification Log    :
+
+<!-- 
+* Created Date        : 03/15/2019
+* Function            : Several Util generic methods not linkied to any functionality
+* Author              : William Lopez, william.salesforce@gmail.com - @BillSalesforce
+* Modification Log    :
 * Developer                Date                 Description
-* ----------------------------------------------------------------------------                 
-* William Lopez           03/14/2019        Original Version
+* ****************************************************************************               
+* William Lopez           03/08/2019        Original Version
 
 MIT License
 
@@ -29,13 +30,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-************************************************************************************************************************************/
-({
-    /* doInit: To be invoke on Load
-     * 
-     */	
-	doInit : function(component, event, helper) {       
-        helper.loadDefaultValeus(component, event, helper);
-       
-	}
-})
+
+-->
+<aura:component extensible="true"> 
+
+    <aura:method name="fireToast" action="{!c.doFireToast}" description="Fire A Javascript Toast"> 
+        <aura:attribute name="title" type="String" default="title"/>  
+        <aura:attribute name="message" type="String" default="message"/>        
+        <aura:attribute name="type" type="String" default="type"/> 
+    </aura:method>
+
+    <aura:method name="debugObject" action="{!c.doJsdebugObject}" description="Write the deserizlied version of an object in the Log"> 
+        <aura:attribute name="message" type="String" default="message"/>
+        <aura:attribute name="object" type="Object" />
+    </aura:method> 
+
+</aura:component>	

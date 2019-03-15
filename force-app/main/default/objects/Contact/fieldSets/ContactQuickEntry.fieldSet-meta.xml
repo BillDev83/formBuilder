@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>ContactQuickEntry</fullName>
-    <description>Exaple field set</description>
+    <description>Example Field set</description>
     <displayedFields>
         <field>AccountId</field>
         <isFieldManaged>false</isFieldManaged>
