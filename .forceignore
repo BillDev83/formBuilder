@@ -10,3 +10,11 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+##base-logic
+##bbase-logic/main/classes/EX*
+##bbase-logic/main/customMetadata
+##bbase-logic/main/flexipages
+##bbase-logic/main/objects/Account
+##bbase-logic/main/objects/Contact
+##bbase-logic/main/profiles

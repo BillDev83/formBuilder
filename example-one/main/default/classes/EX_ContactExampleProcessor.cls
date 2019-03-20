@@ -30,13 +30,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ************************************************************************************************************************************/
-public with sharing class EX_ContactExampleProcessor implements LB_IPreProcessForm {
+public with sharing class EX_ContactExampleProcessor implements LB_IPreProcessForm, LB_IProcessForm {
     
     
     /**
-     * Prepopulate contact Info
-     *
-     *
+     * Prepopulate contact Info from LB_IPreProcessForm
+     * This method will be call it from the controller so we pre-propulate values before show to the customer for editing
+     * 2019-03-15
+     * 
      **/
     public List<sObject> prePropulateObjects(List<LB_EntityExternalParameters> UIParameters){
         
@@ -53,5 +54,54 @@ public with sharing class EX_ContactExampleProcessor implements LB_IPreProcessFo
         
         return new List<sObject>{contact};        
     }
+
+/******************************************  LB_IProcessForm   ***********************************************************/
+
+    /**
+      * Validate recrods would be invoke before saving, here we should place any custom validation logic
+      *
+      **/
+    public List<LB_EntityProcessOutcome> validateRecords(List<Contact> records){
+
+        LB_EntityProcessOutcome outCome = new LB_EntityProcessOutcome();
+           
+           //perform any business logic
+           for(Contact cont: records){
+
+                 //as An example lest add a simple validation ... this will normally would go as a validation rule. Just an example
+                if(String.isEmpty(cont.phone) || !cont.phone.contains('514')){
+                    outCome.isValid = false;
+                    outcome.record = cont;
+                    outcome.errorTittle  =  'Contact Phone is not valid';
+                    outcome.errorMessage =  'Phone must be not empty and it should start containt 514';
+                }
+
+           } 
+
+        return new List<LB_EntityProcessOutcome>{outCome};   
+
+    } 
+
+    /**
+      * Validate recrods would be invoke before saving, here we should place any custom validation logic
+      *
+      **/
+    public List<LB_EntityProcessOutcome> saveRecords(List<Contact> records){
+
+           LB_EntityProcessOutcome outCome = new LB_EntityProcessOutcome();
+
+           //Simple save with no extra logic, but here we can inject values to the records (same values that we normally delegate to triggers)
+            for(Contact cont: records){
+                cont.Title = 'Business';
+            } 
+
+            insert records;
+
+
+           return null; 
+
+    }
+
+/******************************************  PENDING post processing   ***********************************************************/
 
 }
