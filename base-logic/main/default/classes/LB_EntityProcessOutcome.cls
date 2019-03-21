@@ -1,7 +1,7 @@
 /***********************************************************************************************************************************
 Created Date        : 03/08/2019
 Function            : Entity class to carry the info after a record was processed (Validate or Upserted)
-Author              : William Lopez, william.salesforce@gmail.com
+Author              : William Lopez, william.salesforce@gmail.com - @BillSalesforce
 Modification Log    :
 * Developer                Date                 Description
 * ----------------------------------------------------------------------------                 

@@ -110,8 +110,38 @@ SOFTWARE.
       
         $A.enqueueAction(action);   
     
-	},
+    },
     
+    //Process Save
+        processSaveAction: function (component, event, helper){
+            
+            //Get parameters
+            var recordId = component.get("v.recordId");        	
+            var objectType = component.get("v.objectType");
+            var configurationName = component.get("v.configurationName");
+            var formUtils = component.find("formUtils");
+
+
+            console.log('Helper recordId = ' + component.get("v.recordId") + ' configurationName = ' + configurationName + ' objectType = ' + objectType);
+
+            //Set Controller parameters
+            var LB_EntityFromUIMetadata = {recordId: recordId, configurationName: configurationName, objectType: objectType};
+            console.log('LB_EntityFromUIMetadata = ' + LB_EntityFromUIMetadata);
+
+            // TODO set LB_EntityFromUIMetadata.records = Set recordData
+
+            //TODO call processFormData
+            /*
+            *  
+            //Set controller          
+	            var action = component.get("c.processFormData");
+                action.setParams({UIParameters: LB_EntityFromUIMetadata });
+                
+
+            **/
+    
+        },
+        
     //Generic message
     
     	displaymessage : function(component, title, message, type) {    

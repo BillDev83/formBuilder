@@ -36,6 +36,7 @@ public with sharing class EX_ContactExampleProcessor implements LB_IPreProcessFo
     /**
      * Prepopulate contact Info from LB_IPreProcessForm
      * This method will be call it from the controller so we pre-propulate values before show to the customer for editing
+     * IMPORTANT =  Only fields in the field set should be used, any other pre-populated field might be lost 
      * 2019-03-15
      * 
      **/
@@ -90,7 +91,7 @@ public with sharing class EX_ContactExampleProcessor implements LB_IPreProcessFo
 
            LB_EntityProcessOutcome outCome = new LB_EntityProcessOutcome();
 
-           //Simple save with no extra logic, but here we can inject values to the records (same values that we normally delegate to triggers)
+           //Simple save with no extra logic, the goal here is to Inject values to the records (same values that we normally delegate to before triggers)
             for(Contact cont: records){
                 cont.Title = 'Business';
             } 

@@ -32,7 +32,15 @@ SOFTWARE.
 
 ************************************************************************************************************************************/
 public with sharing class LB_FormBuilderController {
+
+    public static final string PROCESS_TYPE_INSERT = 'INSERT';
+    public static final string PROCESS_TYPE_UPDATE = 'UPDATE';
           
+    /**
+     * This method will be called before showing the form to users. 
+     * The prurpose of thos method is to use the metadata and preprocessors to determine the share of the form as well the pre-defined values. 
+     * @TODO: Add Update Support
+     **/      
     @AuraEnabled
     public static LB_EntityProcessOutcome getFormData(LB_EntityExternalParameters UIParameters) {
         
@@ -129,6 +137,122 @@ public with sharing class LB_FormBuilderController {
         
         return processOutCome;    
         
+    }
+
+    /**
+     * This method will be called in order to save a record
+     * @TODO: Add Update Support 
+     * The prurpose of this method is to use the metadata and preprocessors to determine the share of the form as well the pre-defined values. 
+     *
+     **/   
+    @AuraEnabled
+    public static LB_EntityProcessOutcome processFormData(LB_EntityExternalParameters UIParameters) {
+
+        LB_EntityProcessOutcome processOutCome = new LB_EntityProcessOutcome();
+        List<SObject> recordsToProcess = null;
+
+        try{
+            
+            if(UIParameters != null || String.isBlank(UIParameters.configurationName) || String.isBlank(UIParameters.objectType)){
+
+                if(UIParameters.records == null || UIParameters.records.size() ==0){
+
+                    recordsToProcess = UIParameters.records;   
+                                                                     
+                    //Get the Configuration
+                    LB_FormConfiguration__mdt formConfig =  LB_FormConfigurationSelector.getFormConfigurationByName(UIParameters.configurationName);  
+
+
+                     if(formConfig != null){                    
+                        
+                            List<sObject> prefilledObjects = null;
+                                        
+                            if(formConfig.Process_Form_Class__c != null){                        
+                                LB_IProcessForm processFormClassInstance = (LB_IProcessForm)Type.forName(formConfig.Process_Form_Class__c).newInstance(); 
+
+                                List<LB_EntityProcessOutcome> validationOutComes = processFormClassInstance.validateRecords(recordsToProcess);
+                                if(areOutcomesValid(validationOutComes,processOutCome)){
+                                      //TODO save  
+                                }
+                                
+                            }else{
+                                runDefaultProcessLogic(recordsToProcess, PROCESS_TYPE_INSERT);                             
+                            }                       
+                                                                            
+                    }else{                    
+                        system.debug(':LB_FormBuilderController: - processFormData - formConfig is empty using default logic');      
+                        runDefaultProcessLogic(recordsToProcess, PROCESS_TYPE_INSERT);                        
+                    }    
+                     
+
+                }else{
+
+                    processOutCome.isValid = false;
+                    processOutCome.errorTittle = 'Missing Recrods to Process';
+                    processOutCome.errorMessage = 'Data not found !!!';
+                    processOutCome.metadataInfo = null; 
+                }                
+            }else{
+                
+                processOutCome.isValid = false;
+                processOutCome.errorTittle = 'Missing Preprocess Parameters';
+                processOutCome.errorMessage = 'Missing Items ' + (String.isBlank(UIParameters.configurationName) ? ' + Configuration Name ' : '') + 
+                                                                 (String.isBlank(UIParameters.objectType) ? ' + Object type ' : '');
+                processOutCome.metadataInfo = null; 
+                
+            }    
+
+
+        }catch(exception e){
+            system.debug(':LB_FormBuilderController: - processFormData - exception '+ e.getMessage() + ' ' + e.getStackTraceString());
+            processOutCome.isValid = false;
+            processOutCome.errorTittle = 'Exception';
+            processOutCome.errorMessage =  e.getMessage();
+            processOutCome.metadataInfo = null; 
+            
+        }
+        
+        return processOutCome;      
+    }
+
+    /**
+     * In case no processor fund, this default logic would be used
+     * 
+     **/
+    private static void runDefaultProcessLogic(List<SObject> recordsToProcess, String ProcessType){
+
+        if(ProcessType == PROCESS_TYPE_INSERT){
+            insert recordsToProcess;
+        }else{
+            update recordsToProcess;
+        }
+
+        //TODO add the save confirmation ... if ther are not exception we can assume is valid
+    }
+
+    /**
+      * This method will take a list of processing outcomes and summarize the error in a single record. 
+      *      
+      **/
+    private static boolean areOutcomesValid(List<LB_EntityProcessOutcome> processingOutComes, LB_EntityProcessOutcome recapOutcome){
+
+        Boolean ret = true;
+        String errorRecap = '';
+
+        for(LB_EntityProcessOutcome processingOutCome: processingOutComes){
+            if(processingOutCome.isValid == false){
+                ret = false;
+                errorRecap += (errorRecap != '' ? '<br/>':'') + '- ' + processingOutCome.errorTittle + ' - ' + processingOutCome.errorMessage;                             
+            }
+        }
+
+        if(ret == false){
+            recapOutcome.isValid = false;
+            recapOutcome.errorTittle = 'One or more error saving your data';
+            recapOutcome.errorMessage = errorRecap;            
+        }
+
+        return ret;
     }
     
 

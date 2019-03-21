@@ -34,8 +34,16 @@ SOFTWARE.
     /* doInit: To be invoke on Load
      * 
      */	
-	doInit : function(component, event, helper) {       
+      doInit : function(component, event, helper) {       
         helper.loadDefaultValeus(component, event, helper);
        
-	}
+      },
+
+    /* doSave: Invoked on button save
+     * 
+     */	
+       doSave : function(component, event, helper) {       
+           helper.processSaveAction(component, event, helper);
+       
+       }
 })

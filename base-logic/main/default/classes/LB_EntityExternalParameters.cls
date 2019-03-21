@@ -6,7 +6,7 @@ Modification Log    :
 * Developer                Date                 Description
 * ----------------------------------------------------------------------------                 
 * William Lopez           03/08/2019       	Original Version
-
+* William Lopez           03/21/2019       	Added record sObject in order to transfer existing data.
 
 MIT License
 
@@ -42,5 +42,8 @@ public with sharing class LB_EntityExternalParameters {
     
     @AuraEnabled
     public String configurationName{get;set;}
+
+    @AuraEnabled
+    public List<SObject> records{get;set;}
     
 }

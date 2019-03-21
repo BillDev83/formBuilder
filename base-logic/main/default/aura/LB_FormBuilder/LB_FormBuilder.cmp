@@ -87,7 +87,7 @@ SOFTWARE.
                         </aura:iteration>
                         
                         <div class="slds-m-top_medium">
-                            <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                            <lightning:button variant="brand" type="submit" name="save" label="Save" onclick="{!c.doSave}"/>
                         </div>
                 </lightning:recordEditForm>
              </form>
